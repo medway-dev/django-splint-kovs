@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-splint-kovs"
+version = "0.0.45"
+authors = [
+  { name="Silvio Moreto", email="silvio.moreto@medway.com.br" },
+]
+description = "Simple package with utilities for projects with Django Framework"
+readme = "README.md"
+requires-python = ">=3.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "boto3>=1.13",
+    "django>=2.2.11",
+    "djangorestframework>=3.11.0",
+    "django-import-export>=2.4.0",
+    "django-filter>=2.2.0",
+    "Pillow>=8.0.0"
+]
+
+[tool.setuptools.packages.find]
+# All the following settings are optional:
+where = ["src"]  # ["."] by default
+include = ["django_splint*"]  # ["*"] by default
+exclude = ["django_splint.tests*"]  # empty by default
+namespaces = true  # true by default
+
+[project.urls]
+"Homepage" = "https://github.com/medway-dev/django-splint-kovs"
