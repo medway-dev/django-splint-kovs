@@ -40,7 +40,7 @@ class FirebaseAuth:
             f"Updating firebase access of user {email}", extra={**kwargs, **payload}
         )
         try:
-            user = self.app.get_user_by_email(email)
+            user = self.get(email)
         except auth.UserNotFoundError:
             self.create(**payload)
             LOG.warning(
