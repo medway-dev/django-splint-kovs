@@ -1,7 +1,16 @@
-boto3>=1.13
-setuptools>=42
+## Django
 django>=2.2.11
-Pillow>=8.0.0
 djangorestframework>=3.11.0
 django-import-export>=2.4.0
 django-filter>=2.2.0
+
+## AWS
+boto3>=1.13
+aws-lambda-powertools==2.4.0 # https://github.com/awslabs/aws-lambda-powertools-python
+
+## Google
+firebase-admin>=6.2,<6.3 # https://firebase.google.com/docs/reference/admin/python
+
+# Ptyhon
+setuptools>=42
+Pillow>=8.0.0
