@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-splint-kovs"
-version = "0.0.48"
+version = "0.0.49"
 authors = [
   { name="Silvio Moreto", email="silvio.moreto@medway.com.br" },
 ]
