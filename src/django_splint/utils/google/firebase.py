@@ -42,34 +42,35 @@ class FirebaseAuth:
         try:
             user = self.get(email)
         except auth.UserNotFoundError:
-            self.create(**payload)
+            user = self.create(**payload)
             LOG.warning(
                 f"User {email} not found in firebase, creating new user...",
                 extra={**kwargs, **payload},
             )
-            return
+            return user, True
 
         try:
             user = self.app.update_user(user.uid, **payload)
-        except auth.EmailAlreadyExistsError:
+        except auth.EmailAlreadyExistsError as error:
             LOG.warning(
                 f"User {payload['email']} already exists in firebase",
                 extra={**kwargs, **payload},
             )
-            return
+            raise error
         LOG.info(
             f"Updated firebase access for user {email}", extra={**kwargs, **payload}
         )
+        return user, False
 
 
 class FirebaseDatabase:
 
     @classmethod
-    def get(self, path, uid):
+    def get(self, path, uid, url=settings.GOOGLE_FIREBASE_DATABASE_URL):
         return (
             db
             .reference(
                 path=f"/{path}/{uid}/",
-                url=settings.GOOGLE_FIREBASE_DATABASE_URL)
+                url=url)
             .get()
         )
