@@ -86,12 +86,11 @@ class FirebaseAuth:
 
         try:
             user = cls.app.update_user(user.uid, **payload)
-        except auth.EmailAlreadyExistsError as error:
+        except auth.EmailAlreadyExistsError:
             LOG.warning(
                 f"User {payload['email']} already exists in firebase",
                 extra={**kwargs, **payload},
             )
-            raise error
         LOG.info(
             f"Updated firebase access for user {email}", extra={**kwargs, **payload}
         )
