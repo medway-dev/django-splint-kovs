@@ -77,7 +77,7 @@ class FirebaseAuth:
         try:
             user = cls.get(email)
         except auth.UserNotFoundError:
-            user = cls.create(**payload)
+            user = cls.create(cls, **payload)
             LOG.warning(
                 f"User {email} not found in firebase, creating new user...",
                 extra={**kwargs, **payload},
