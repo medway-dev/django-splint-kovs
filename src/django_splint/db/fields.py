@@ -58,7 +58,7 @@ class SplintImageField(ImageField):
                 else:
                     CONVERT = "RGB"
                     FORMAT = "JPEG"
-                    EXTENSION = "jpe"
+                    EXTENSION = "jpg"
                 assert self.width or self.height
                 width, height = self.width, self.height
 
@@ -71,7 +71,7 @@ class SplintImageField(ImageField):
 
                 width = min(width, im.width)
                 height = min(height, im.height)
-                im = im.resize((width, height), Image.ANTIALIAS)
+                im = im.resize((width, height), Image.Resampling.LANCZOS)
 
                 with NamedTemporaryFile() as temp_file:
                     # Force image convertion to JPEG
