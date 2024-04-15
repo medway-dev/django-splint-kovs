@@ -5,6 +5,8 @@ from django.conf import settings
 class AWSSQSHandler:
     """AWS ECS service handler."""
 
+    service_name = 'sqs'
+
     def __init__(self, aws_access_key_id=None, aws_secret_access_key=None, aws_region_name=None):
         self.client = boto3.client(
             service_name=self.service_name,
