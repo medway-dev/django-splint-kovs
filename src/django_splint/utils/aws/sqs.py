@@ -5,12 +5,13 @@ from django.conf import settings
 class AWSSQSHandler:
     """AWS ECS service handler."""
 
-    client = boto3.client(
-        service_name="sqs",
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        region_name=settings.AWS_DEFAULT_REGION,
-    )
+    def __init__(self, aws_access_key_id=None, aws_secret_access_key=None, aws_region_name=None):
+        self.client = boto3.client(
+            service_name=self.service_name,
+            aws_access_key_id=aws_access_key_id or settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=aws_secret_access_key or settings.AWS_SECRET_ACCESS_KEY,
+            region_name=aws_region_name or settings.AWS_DEFAULT_REGION,
+        )
 
     def send_message(self, **kwargs):
         attributes = kwargs.get("MessageAttributes")
