@@ -1,26 +1,20 @@
-
 from django.conf import settings
 from django.contrib import admin
 from django.core.exceptions import FieldError
 
-from import_export.admin import ExportActionMixin
-
 from django_splint.db.models import SplintModel
-
 
 try:
     EXTRA_CSS = settings.EXTRA_CSS
 except AttributeError:
-    EXTRA_CSS = '/static/css/custom_admin.css'
+    EXTRA_CSS = "/static/css/custom_admin.css"
 
 
 class SplintBaseAdminMixin(object):
-    exclude = ['_deleted', '_deleted_at']
+    exclude = ["_deleted", "_deleted_at"]
 
     class Media:
-        css = {
-            'all': (EXTRA_CSS,)
-        }
+        css = {"all": (EXTRA_CSS,)}
 
     def get_queryset(self, request):
         """Filter not deleted."""
@@ -37,15 +31,15 @@ class SplintBaseAdminMixin(object):
 
 class SplintInlineAdminMixin(object):
     extra = 1
-    exclude = ['_deleted', '_deleted_at']
+    exclude = ["_deleted", "_deleted_at"]
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """Remove deleted from queryset."""
-        if 'queryset' not in kwargs:
+        if "queryset" not in kwargs:
             queryset = self.get_naive_queryset(db_field)
             if queryset is not None:
                 try:
-                    kwargs['queryset'] = queryset.filter(_deleted=False)
+                    kwargs["queryset"] = queryset.filter(_deleted=False)
                 except FieldError:
                     pass
 
@@ -64,11 +58,11 @@ class SplintModelAdminMixin(SplintBaseAdminMixin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """Remove deleted from queryset."""
-        if 'queryset' not in kwargs:
+        if "queryset" not in kwargs:
             queryset = self.get_naive_queryset(db_field)
             if queryset is not None:
                 try:
-                    kwargs['queryset'] = queryset.filter(_deleted=False)
+                    kwargs["queryset"] = queryset.filter(_deleted=False)
                 except FieldError:
                     pass
 
@@ -76,11 +70,11 @@ class SplintModelAdminMixin(SplintBaseAdminMixin):
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         """Remove deleted from queryset."""
-        if 'queryset' not in kwargs:
+        if "queryset" not in kwargs:
             queryset = self.get_naive_queryset(db_field)
             if queryset is not None:
                 try:
-                    kwargs['queryset'] = queryset.filter(_deleted=False)
+                    kwargs["queryset"] = queryset.filter(_deleted=False)
                 except FieldError:
                     pass
 
@@ -97,14 +91,14 @@ class SplintModelAdminMixin(SplintBaseAdminMixin):
         workaround.
         """
         if request.is_ajax:
-            search_term = request.GET.get('term')
+            search_term = request.GET.get("term")
             if search_term is None:
-                search_term = request.GET.get('q', '')
+                search_term = request.GET.get("q", "")
         return super().get_search_results(request, queryset, search_term)
 
 
-class SplintModelAdmin(ExportActionMixin, SplintModelAdminMixin, admin.ModelAdmin):
-    ordering = ('-created_at',)
+class SplintModelAdmin(SplintModelAdminMixin, admin.ModelAdmin):
+    ordering = ("-created_at",)
 
 
 class SplintReadOnlyAdminMixin:
@@ -124,6 +118,7 @@ class SplintReadOnlyAdminMixin:
 
 class SplintReadOnlyModelAdmin(SplintReadOnlyAdminMixin, SplintModelAdmin):
     """ModelAdmin class that prevents modifications through the admin."""
+
     pass
 
 

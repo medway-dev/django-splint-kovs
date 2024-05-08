@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-splint-kovs"
-version = "0.0.55"
+version = "0.0.56"
 authors = [
   { name="Silvio Moreto", email="silvio.moreto@medway.com.br" },
 ]
@@ -20,7 +20,6 @@ dependencies = [
     "boto3>=1.13",
     "django>=2.2.11",
     "djangorestframework>=3.11.0",
-    "django-import-export>=2.4.0",
     "django-filter>=2.2.0",
     "aws-lambda-powertools==2.4.0",
     "firebase-admin>=6.2,<6.3",
