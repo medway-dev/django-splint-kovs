@@ -82,7 +82,7 @@ class FirebaseAuth:
                 f"User {email} not found in firebase, creating new user...",
                 extra={**kwargs, **payload},
             )
-            return user, True
+            return user, False
 
         try:
             user = cls.app.update_user(user.uid, **payload)
@@ -91,10 +91,13 @@ class FirebaseAuth:
                 f"User {payload['email']} already exists in firebase",
                 extra={**kwargs, **payload},
             )
+
+            return user, False
+        
         LOG.info(
             f"Updated firebase access for user {email}", extra={**kwargs, **payload}
         )
-        return user, False
+        return user, True
 
 
 class FirebaseDatabase:
