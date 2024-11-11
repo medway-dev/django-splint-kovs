@@ -86,13 +86,8 @@ class SplintModel(models.Model):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        original_value_fields = getattr(self._meta, "original_value_fields", ())
-        list(
-            map(
-                lambda f: setattr(self, f"__original_{f}", getattr(self, f)),
-                original_value_fields,
-            )
-        )
+        for field in getattr(self._meta, "original_value_fields", ()):
+            setattr(self, f"__original_{field}", self.__dict__.get(field))
 
     def save(self, log_activity=True, *args, **kwargs):
         """Save overwrite to log every every action in the system."""
