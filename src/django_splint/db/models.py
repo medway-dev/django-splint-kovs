@@ -96,18 +96,53 @@ class SplintModel(models.Model):
         res = super(SplintModel, self).save(*args, **kwargs)
 
         if log_activity:
+            try:
+                # Tenta obter o dicionário do modelo de forma segura
+                object_data = self._safe_model_to_dict()
+            except Exception as e:
+                # Se falhar, usa apenas informações básicas
+                logger.warning(
+                    f"Erro ao serializar modelo "
+                    f"{self.__class__.__name__}: {str(e)}"
+                )
+                object_data = {
+                    'id': getattr(self, 'id', None),
+                    'model': self.__class__.__name__,
+                    'error': 'Serialization failed'
+                }
+
             log = {
                 'action': action,
                 'origin': getattr(self, 'origin', None),
                 'user': getattr(self, 'user_id', None),
                 'model': self.__class__.__name__,
-                'object': model_to_dict(self, exclude=getattr(
-                    self, 'exclude_log', None)),
+                'object': object_data,
             }
 
             logger.info(log)
 
         return res
+
+    def _safe_model_to_dict(self):
+        """Safely convert model to dict, handling M2M fields properly."""
+        exclude_fields = getattr(self, 'exclude_log', None) or []
+        
+        # Adiciona campos M2M ao exclude por padrão para evitar problemas
+        m2m_fields = [field.name for field in self._meta.many_to_many]
+        exclude_fields = list(exclude_fields) + m2m_fields
+        
+        try:
+            return model_to_dict(self, exclude=exclude_fields)
+        except Exception:
+            # Fallback: retorna apenas campos básicos
+            data = {}
+            for field in self._meta.fields:
+                if field.name not in exclude_fields:
+                    try:
+                        data[field.name] = getattr(self, field.name)
+                    except Exception:
+                        data[field.name] = None
+            return data
 
     def delete(self, *args, **kwargs):
         """Delete overwrite to perform soft delete."""
